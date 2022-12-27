@@ -54,21 +54,23 @@ npx prisma migrate dev --name init
 ## Running
 
 ```
-cd backend
-npm run start:dev
+(cd backend && npm run start:dev)
 ```
 
 # Environment
 
-All environment variables are defined in the `.env` file in the root of this repo
-
-There are hard symlinks to `.env` in the `frontend` and `backend` folders, so environment variables are all in a single location.
-
-```
-mklink /H "./backend/.env" "./.env"
-mklink /H "./frontend/.env" "./.env"
-```
+All environment variables are defined in `.env` which has hard symlinks pointing to it at `frontend/.env` and `backend/.env`
 
 # Reference
 
 [https://github.com/lujakob/nestjs-realworld-example-app/tree/prisma](https://github.com/lujakob/nestjs-realworld-example-app/tree/prisma)
+
+# Scratch
+
+- Installed Git Bash with "Enable symbolic links"
+- Enabled Developer Mode on Windows 11
+- https://stackoverflow.com/a/67834798/3620725
+  - setx MSYS winsymlinks:nativestrict
+- mkdir symlink-test
+- cd symlink-test
+- ln "./.env" "./backend/.env"
