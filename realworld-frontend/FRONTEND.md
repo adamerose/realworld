@@ -1,3 +1,7 @@
+- [Project](../README.md)
+- [Running](#running)
+- [Setup](#setup)
+
 ## Running
 
 ```
