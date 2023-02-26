@@ -20,6 +20,7 @@ npm i --save class-validator class-transformer
 
 # Authentication
 npm install argon2
+npm install @faker-js/faker --save-dev
 # https://docs.nestjs.com/security/authentication#authentication-requirements
 npm install --save @nestjs/passport passport passport-local
 npm install --save-dev @types/passport-local
@@ -31,7 +32,9 @@ npm install --save-dev @types/passport-jwt
 # CLI
 
 ```
-nest generate resource article
+nest generate resource articles
+
+npx prisma migrate reset
 ```
 
 # Concepts
