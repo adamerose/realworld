@@ -1,8 +1,7 @@
-/* eslint-disable import/order */
 import { useEffect, useState } from 'react';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import './App.scss';
-import Articles from './pages/Articles';
+import ArticlesDisplay from './pages/Articles';
 import Counter from './pages/Counter';
 import KitchenSink from './pages/KitchenSink';
 import Profile from './pages/Profile';
@@ -12,7 +11,7 @@ function App() {
 
   const pages = [
     { name: 'Counter', path: '/counter', Component: Counter },
-    { name: 'Articles', path: '/articles', Component: Articles },
+    { name: 'Articles', path: '/articles', Component: ArticlesDisplay },
     { name: 'Profile', path: '/profile', Component: Profile },
     { name: 'KitchenSink', path: '/kitchen-sink', Component: KitchenSink },
   ];
@@ -23,12 +22,11 @@ function App() {
         <h1>RealWorld</h1>
         <ul>
           {pages.map((page) => (
-            <NavLink key={page.name} to={page.path}>
-              <li>{page.name}</li>
-            </NavLink>
+            <li key={page.name}>
+              <NavLink to={page.path}>{page.name}</NavLink>
+            </li>
           ))}
         </ul>
-
         <button onClick={toggleTheme}>Toggle Theme</button>
       </nav>
 
@@ -61,7 +59,7 @@ function useToggleTheme() {
   if (link == null) {
     let newLink = document.createElement('link');
 
-    newLink.id = 'useToggleThemeNewLink';
+    newLink.id = 'useToggleThemeLink';
     newLink.type = 'text/css';
     newLink.rel = 'stylesheet';
     newLink.href = stylePath;

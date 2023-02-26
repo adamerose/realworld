@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   decrement,
   increment,
@@ -7,32 +7,22 @@ import {
   incrementByAmount,
   selectCount,
 } from '../redux/counterSlice';
+import { useAppDispatch } from '../redux/store';
 
 function Counter() {
   const count = useSelector(selectCount);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');
 
   return (
     <div>
       <div>
-        <button
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}
-        >
-          +
-        </button>
-        <span>{count}</span>
-        <button
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}
-        >
-          -
-        </button>
+        <button onClick={() => dispatch(increment())}>+</button>
+        <button disabled>{count}</button>
+        <button onClick={() => dispatch(decrement())}>-</button>
       </div>
       <div>
         <input
-          aria-label="Set increment amount"
           value={incrementAmount}
           onChange={(e) => setIncrementAmount(e.target.value)}
         />

@@ -8,9 +8,13 @@ const initialState = [
 const articlesSlice = createSlice({
   name: 'articles',
   initialState,
-  reducers: {},
+  reducers: {
+    articleAdded(state, action) {
+      state.push(action.payload);
+    },
+  },
 });
 
-export const {} = articlesSlice.actions;
+export const { articleAdded } = articlesSlice.actions;
 
 export default articlesSlice.reducer;
