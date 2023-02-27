@@ -143,6 +143,10 @@ RTK Query
 - Extract the `RootState` type and the `Dispatch` type from store so that they can be referenced as needed
 - While it's possible to import the `RootState` and `AppDispatch` types into each component, it's better to **create pre-typed versions of the** `useDispatch` **and** `useSelector` **hooks for usage in your application**
 
+# Notes
+
+- Don't have any side effects in reducers (eg. logging, random, etc). Use [prepare](https://redux-toolkit.js.org/api/createSlice#customizing-generated-action-creators) instead
+
 # Complaints
 
 - RTK often calls things “actions” when they're actually “action creators”. \[[1](https://redux-toolkit.js.org/api/createAction), [2](https://github.com/reduxjs/redux-toolkit/issues/673)\]

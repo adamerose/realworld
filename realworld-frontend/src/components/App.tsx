@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Navigate,
+  NavLink,
+  Route,
+  Routes,
+} from 'react-router-dom';
 import './App.scss';
-import ArticlesDisplay from './pages/Articles';
+import ArticlesDisplay from './pages/ArticleList';
+import ArticleSingle from './pages/ArticleSingle';
 import Counter from './pages/Counter';
 import KitchenSink from './pages/KitchenSink';
 import Profile from './pages/Profile';
@@ -39,6 +46,11 @@ function App() {
               element={<page.Component />}
             />
           ))}
+          <Route path="/articles/:articleId" element={<ArticleSingle />} />
+          {/* Homepage is articles */}
+          <Route path="/" element={<Navigate replace to="/articles" />} />
+          {/* Fallback */}
+          <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
       </main>
     </BrowserRouter>
