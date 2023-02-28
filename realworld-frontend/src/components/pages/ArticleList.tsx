@@ -45,13 +45,7 @@ function NewArticleForm() {
   const dispatch = useDispatch();
   const onSaveArticleClicked = () => {
     if (title && content) {
-      dispatch(
-        articleAdded({
-          id: nanoid(),
-          title,
-          content,
-        }),
-      );
+      dispatch(articleAdded(title, content));
 
       setTitle('');
       setContent('');

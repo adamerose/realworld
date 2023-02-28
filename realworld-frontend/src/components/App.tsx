@@ -7,10 +7,12 @@ import {
   Routes,
 } from 'react-router-dom';
 import './App.scss';
+import { ArticleEdit } from './pages/ArticleEdit';
 import ArticlesDisplay from './pages/ArticleList';
 import ArticleSingle from './pages/ArticleSingle';
 import Counter from './pages/Counter';
 import KitchenSink from './pages/KitchenSink';
+import NotFoundPage from './pages/NotFoundPage';
 import Profile from './pages/Profile';
 
 function App() {
@@ -47,10 +49,9 @@ function App() {
             />
           ))}
           <Route path="/articles/:articleId" element={<ArticleSingle />} />
-          {/* Homepage is articles */}
-          <Route path="/" element={<Navigate replace to="/articles" />} />
-          {/* Fallback */}
-          <Route path="*" element={<Navigate replace to="/" />} />
+          <Route path="/editArticle/:articleId" element={<ArticleEdit />} />
+
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
     </BrowserRouter>

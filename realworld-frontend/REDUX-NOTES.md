@@ -145,7 +145,7 @@ RTK Query
 
 # Notes
 
-- Don't have any side effects in reducers (eg. logging, random, etc). Use [prepare](https://redux-toolkit.js.org/api/createSlice#customizing-generated-action-creators) instead
+- Don't have any side effects in reducers (eg. logging, random, etc). Use [prepare](https://redux.js.org/tutorials/essentials/part-4-using-data#preparing-action-payloads) instead
 
 # Complaints
 

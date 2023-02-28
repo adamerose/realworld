@@ -1,28 +1,36 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
 import { articleAdded } from '../redux/articlesSlice';
 
-export const ArticleSingle = ({ match }) => {
-  const { postId } = match.params;
+export const ArticleSingle = () => {
+  const params = useParams();
+  const { articleId } = params;
 
-  const post = useSelector((state) =>
-    state.posts.find((post) => post.id === postId),
+  const article = useSelector((state) =>
+    state.articles.find((article) => article.id === articleId),
   );
 
-  if (!post) {
-    return (
-      <section>
-        <h2>Post not found!</h2>
-      </section>
+  let content;
+  if (!article) {
+    content = <h2>Article not found!</h2>;
+  } else {
+    content = (
+      <article className="article">
+        <h2>{article.title}</h2>
+        <p className="article-content">{article.content}</p>
+
+        <Link to={`/editArticle/${article.id}`}>
+          <button>Edit Article</button>
+        </Link>
+      </article>
     );
   }
 
   return (
     <section>
-      <article className="post">
-        <h2>{post.title}</h2>
-        <p className="post-content">{post.content}</p>
-      </article>
+      <Link to="/articles">←Back</Link>
+      {content}
     </section>
   );
 };
