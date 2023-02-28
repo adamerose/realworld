@@ -7,10 +7,10 @@ import {
   Routes,
 } from 'react-router-dom';
 import './App.scss';
-import { ArticleEdit } from './pages/ArticleEdit';
-import ArticlesDisplay from './pages/ArticleList';
-import ArticleSingle from './pages/ArticleSingle';
-import Counter from './pages/Counter';
+import { ArticleEdit } from '../features/articles/ArticleEdit';
+import ArticlesDisplay from '../features/articles/ArticleList';
+import ArticleSingle from '../features/articles/ArticleSingle';
+import Counter from '../features/counter/Counter';
 import KitchenSink from './pages/KitchenSink';
 import NotFoundPage from './pages/NotFoundPage';
 import Profile from './pages/Profile';

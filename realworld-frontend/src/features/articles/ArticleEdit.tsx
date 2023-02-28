@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { articleUpdated } from '../redux/articlesSlice';
-import { useAppSelector } from '../redux/store';
+import { articleUpdated } from './articlesSlice';
+import { useAppSelector } from '../../app/store';
 
 export const ArticleEdit = () => {
   const params = useParams();

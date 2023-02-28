@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../../app/store';
 import {
   decrement,
   increment,
   incrementAsync,
   incrementByAmount,
   selectCount,
-} from '../redux/counterSlice';
-import { useAppDispatch } from '../redux/store';
+} from './counterSlice';
 
 function Counter() {
   const count = useSelector(selectCount);

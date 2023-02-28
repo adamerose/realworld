@@ -151,6 +151,9 @@ RTK Query
 
 - RTK often calls things “actions” when they're actually “action creators”. \[[1](https://redux-toolkit.js.org/api/createAction), [2](https://github.com/reduxjs/redux-toolkit/issues/673)\]
 - It does this with thunks too. createAsyncThunk creates a thunk action creator.
+- Inconsistency: Normally you provide arguments as a payload object, but if you use `prepare` you provide unpacked arguments directly to the action creator
+  - dispatch(articleUpdated({ id: articleId, title, content }));
+  - dispatch(articleAdded(title, content));
 - Boilerplate
   - Why do we need `extraReducers`
   - Why do we individually import actions and selectors? Compare to OvermindJS and mobx-state-tree where I can just import

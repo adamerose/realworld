@@ -1,8 +1,8 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch } from 'react-redux';
-import articlesReducer from './articlesSlice';
-import usersReducer from './usersSlice';
-import counterReducer from './counterSlice';
+import articlesReducer from '../features/articles/articlesSlice';
+import usersReducer from '../features/users/usersSlice';
+import counterReducer from '../features/counter/counterSlice';
 import { useSelector } from 'react-redux';
 
 const store = configureStore({

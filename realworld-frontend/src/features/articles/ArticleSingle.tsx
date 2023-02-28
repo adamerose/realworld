@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { articleAdded } from '../redux/articlesSlice';
+import { articleAdded } from './articlesSlice';
+import { ArticleAuthor } from './ArticleAuthor';
+import { TimeAgo } from './TimeAgo';
+import { ReactionButtons } from './ReactionButton';
 
 export const ArticleSingle = () => {
   const params = useParams();
@@ -16,22 +19,27 @@ export const ArticleSingle = () => {
     content = <h2>Article not found!</h2>;
   } else {
     content = (
-      <article className="article">
+      <>
         <h2>{article.title}</h2>
-        <p className="article-content">{article.content}</p>
+        <div>
+          <ArticleAuthor userId={article.user} />
+          <TimeAgo timestamp={article.date} />
+        </div>
+        <p>{article.content}</p>
+        <ReactionButtons article={article} />
 
         <Link to={`/editArticle/${article.id}`}>
           <button>Edit Article</button>
         </Link>
-      </article>
+      </>
     );
   }
 
   return (
-    <section>
+    <article>
       <Link to="/articles">←Back</Link>
       {content}
-    </section>
+    </article>
   );
 };
 
