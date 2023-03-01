@@ -1,36 +1,25 @@
-import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  nanoid,
+  PayloadAction,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
 import { sub } from 'date-fns';
+import { client } from '../../api/client';
 
-const initialState = [
-  {
-    id: '1',
-    title: 'First Article!',
-    content: 'Hello!',
-    user: '0',
-    date: sub(new Date(), { minutes: 10 }).toISOString(),
-    reactions: {
-      thumbsUp: 0,
-      hooray: 0,
-      heart: 0,
-      rocket: 0,
-      eyes: 0,
-    },
+const initialState = {
+  articles: [],
+  status: 'idle',
+  error: null,
+};
+
+export const fetchArticles = createAsyncThunk(
+  'articles/fetchArticles',
+  async () => {
+    const response = await client.get('/fakeApi/posts');
+    return response.data;
   },
-  {
-    id: '2',
-    title: 'Second Article',
-    content: 'More text',
-    user: '2',
-    date: sub(new Date(), { minutes: 5 }).toISOString(),
-    reactions: {
-      thumbsUp: 0,
-      hooray: 0,
-      heart: 0,
-      rocket: 0,
-      eyes: 0,
-    },
-  },
-];
+);
 
 const articlesSlice = createSlice({
   name: 'articles',
@@ -41,7 +30,7 @@ const articlesSlice = createSlice({
         state,
         action: PayloadAction<{ id: string; title: string; content: string }>,
       ) => {
-        state.push(action.payload);
+        state.articles.push(action.payload);
       },
       prepare(title, content, userId) {
         return {
@@ -59,23 +48,50 @@ const articlesSlice = createSlice({
 
     reactionAdded(state, action) {
       const { articleId, reaction } = action.payload;
-      const existingArticle = state.find((article) => article.id === articleId);
+      const existingArticle = state.articles.find(
+        (article) => article.id === articleId,
+      );
+
       if (existingArticle) {
         existingArticle.reactions[reaction]++;
       }
     },
     articleUpdated(state, action) {
       const { id, title, content } = action.payload;
-      const existingArticle = state.find((article) => article.id === id);
+      const existingArticle = state.articles.find(
+        (article) => article.id === id,
+      );
       if (existingArticle) {
         existingArticle.title = title;
         existingArticle.content = content;
       }
     },
   },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchArticles.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchArticles.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        // Add any fetched articles to the array
+        state.articles = state.articles.concat(action.payload);
+      })
+      .addCase(fetchArticles.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      });
+  },
 });
 
+// Selectors
+export const selectAllArticles = (state) => state.articles.articles;
+export const selectArticleById = (state, articleId) =>
+  state.articles.articles.find((article) => article.id === articleId);
+
+// Actions
 export const { articleAdded, articleUpdated, reactionAdded } =
   articlesSlice.actions;
 
+// Reducer
 export default articlesSlice.reducer;

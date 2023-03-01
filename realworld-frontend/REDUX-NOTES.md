@@ -77,7 +77,7 @@ const fetchUserById = userId => {
 
 [https://www.youtube.com/watch?v=14XGPHtoW1Y&t=635s](https://www.youtube.com/watch?v=14XGPHtoW1Y&t=635s)
 
-Summary
+### Summary
 
 - State is saved in the **store**
 - A **slice** is a collection of reducers and actions for a single feature
@@ -86,14 +86,14 @@ Summary
 - The store listens for actions and passes them to **reducers**
 - Reducers calculate the new state like `(state, action) => newState`
 
-Snippets
+### Snippets
 
 - _Counter.jsx_
 - _counterSlice.jsx_
 - _store.ts_
 - _main.tsx_
 
-Setup
+### Setup
 
 - Wrap root component like `<Provider store={store}> <App /> </Provider>`
 - Create store with `configureStore` in `store.ts` with reducers of every slice
@@ -104,7 +104,7 @@ Setup
 - Adds middleware to check for accidental mutations and non-serializable values
 - Optionally specify additional middlware, initial state, and store enhances
 
-Slices
+### Slices
 
 - Create a slice for each domain with `createSlice`
 - `createSlice({name, initialState, reducers, extraReducers)}`
@@ -112,26 +112,41 @@ Slices
 - Pass reducers as an object full of named functions
 - Export and use `mySlice.actions` and `mySlice.reducer`
 - Named export the selectors and actions. Default export the reducer.
+- `extraReducers` takes all reducers defined outside `createSlice`, like thunks
 
-Selectors
+### Actions
 
-- Import selectors & actions to JSX component
+- Action creators get defined automatically by `createSlice`. Export them like:
+  - `export const { articleAdded, articleUpdated} =  articlesSlice.actions;`
+- Dispatch actions in JSX components like:
+  - `const dispatch = useDispatch();`
+  - `dispatch(articleAdded({title, content}));`
+
+### Selectors
+
+- Define selector in slice and export it
+  - `export const selectAllArticles = (state) => state.articles;`
+- Import to component and call using `useSelector`. Alternatively write them directly in the component
+  - `const articles = useSelector(selectAllArticles)`
+  - `const articles = useSelector((state) => state.articles);`
+  - `const article = useSelector((state) => selectArticleById(state, articleId));`
 - Use `createSelector` for writing memoized selectors
 
-Thunks (often not needed, instead of RTK Query)
+### Thunks
 
-- Dispatch “loading” action before fetch
-- Dispatch either “success” or “failure” action based on result
-- `createAsyncThunk("name", await (myArgs) => {*api stuff* return myPromise})`
+- Often not needed, instead use RTK Query
+- Dispatch “loading” action and then either “success” or “failure” action based on result
+- `createAsyncThunk` generates these 3 actions for us automatically
+  - `createAsyncThunk("name", await (myArgs) => {*api stuff* return myPromise})`
 - Takes an action type string and a callback that returns a promise
 - Generates and dispatches actions for “pending”, “fulfilled”, and “rejected” cases
 
-Normalizing state
+### Normalizing state
 
 - Store items in a lookup table where keys are ids and values are the item
 - `createEntityAdapter` creates an adapter with prebuilt functions for CRUD operations on normalized data
 
-RTK Query
+### RTK Query
 
 - Fully abstracts the data fetching and caching process
 - Define an API. Provide a baseUrl and endpoints
@@ -146,6 +161,7 @@ RTK Query
 # Notes
 
 - Don't have any side effects in reducers (eg. logging, random, etc). Use [prepare](https://redux.js.org/tutorials/essentials/part-4-using-data#preparing-action-payloads) instead
+- **Don't feel like you need to write reusable selectors for every single field of your state**. Start by writing them inline in the component and refactor later when you find yourself looking up the same values in many parts of your application code.
 
 # Complaints
 

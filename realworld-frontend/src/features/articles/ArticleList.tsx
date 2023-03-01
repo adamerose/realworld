@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { articleAdded } from './articlesSlice';
+import {
+  articleAdded,
+  fetchArticles,
+  selectAllArticles,
+} from './articlesSlice';
 import { nanoid } from '@reduxjs/toolkit';
 import { Link } from 'react-router-dom';
 import ArticleAdd from './ArticleAdd';
 import { ArticleAuthor } from './ArticleAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactionButton';
+import { useAppDispatch } from '../../app/store';
 
 export default function ArticleList() {
   return (
@@ -17,18 +22,28 @@ export default function ArticleList() {
   );
 }
 function ArticlesList() {
-  const articles = useSelector((state) => state.articles);
+  const dispatch = useAppDispatch();
+
+  const articles = useSelector(selectAllArticles);
 
   // sort articles by date in descending order
   const orderedArticles = articles
     ? articles.slice().sort((a, b) => b.date.localeCompare(a.date))
     : [];
 
+  const articleStatus = useSelector((state) => state.articles.status);
+
+  useEffect(() => {
+    if (articleStatus === 'idle') {
+      dispatch(fetchArticles());
+    }
+  }, [articleStatus, dispatch]);
+
   return (
     <section>
       <hr />
-      <h2>Posts</h2>
-      {articles.map((article) => (
+      <h2>Articles</h2>
+      {orderedArticles.map((article) => (
         <article>
           <Link
             key={article.id}

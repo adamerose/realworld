@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { articleAdded } from './articlesSlice';
+import { articleAdded, selectArticleById } from './articlesSlice';
 import { ArticleAuthor } from './ArticleAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactionButton';
@@ -10,9 +10,7 @@ export const ArticleSingle = () => {
   const params = useParams();
   const { articleId } = params;
 
-  const article = useSelector((state) =>
-    state.articles.find((article) => article.id === articleId),
-  );
+  const article = useSelector((state) => selectArticleById(state, articleId));
 
   let content;
   if (!article) {
