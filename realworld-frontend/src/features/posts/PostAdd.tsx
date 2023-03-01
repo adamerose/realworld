@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { articleAdded } from './articlesSlice';
+import { postAdded } from './postsSlice';
 import { nanoid } from '@reduxjs/toolkit';
 import { Link } from 'react-router-dom';
 
-function ArticleAdd() {
+function PostAdd() {
   // Local state
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -17,9 +17,9 @@ function ArticleAdd() {
   const onAuthorChanged = (e) => setUserId(e.target.value);
   const users = useSelector((state) => state.users);
 
-  const onSaveArticleClicked = () => {
+  const onSavePostClicked = () => {
     if (title && content) {
-      dispatch(articleAdded(title, content, userId));
+      dispatch(postAdded(title, content, userId));
 
       setTitle('');
       setContent('');
@@ -37,38 +37,34 @@ function ArticleAdd() {
 
   return (
     <section>
-      <h2>Add a New Article</h2>
+      <h2>Add a New Post</h2>
       <form>
-        <label htmlFor="articleTitle">Article Title:</label>
+        <label htmlFor="postTitle">Post Title:</label>
         <input
           type="text"
-          id="articleTitle"
-          name="articleTitle"
+          id="postTitle"
+          name="postTitle"
           value={title}
           onChange={onTitleChanged}
         />
-        <label htmlFor="articleAuthor">Author:</label>
-        <select id="articleAuthor" value={userId} onChange={onAuthorChanged}>
+        <label htmlFor="postAuthor">Author:</label>
+        <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
           <option value=""></option>
           {usersOptions}
         </select>
-        <label htmlFor="articleContent">Content:</label>
+        <label htmlFor="postContent">Content:</label>
         <textarea
-          id="articleContent"
-          name="articleContent"
+          id="postContent"
+          name="postContent"
           value={content}
           onChange={onContentChanged}
         />
-        <button
-          type="button"
-          onClick={onSaveArticleClicked}
-          disabled={!canSave}
-        >
-          Save Article
+        <button type="button" onClick={onSavePostClicked} disabled={!canSave}>
+          Save Post
         </button>
       </form>
     </section>
   );
 }
 
-export default ArticleAdd;
+export default PostAdd;

@@ -1,6 +1,6 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch } from 'react-redux';
-import articlesReducer from '../features/articles/articlesSlice';
+import postsReducer from '../features/posts/postsSlice';
 import usersReducer from '../features/users/usersSlice';
 import counterReducer from '../features/counter/counterSlice';
 import { useSelector } from 'react-redux';
@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 const store = configureStore({
   reducer: {
     counter: counterReducer,
-    articles: articlesReducer,
+    posts: postsReducer,
     users: usersReducer,
   },
 });

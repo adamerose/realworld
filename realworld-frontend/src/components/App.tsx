@@ -7,9 +7,9 @@ import {
   Routes,
 } from 'react-router-dom';
 import './App.scss';
-import { ArticleEdit } from '../features/articles/ArticleEdit';
-import ArticlesDisplay from '../features/articles/ArticleList';
-import ArticleSingle from '../features/articles/ArticleSingle';
+import { PostEdit } from '../features/posts/PostEdit';
+import PostsDisplay from '../features/posts/PostList';
+import PostSingle from '../features/posts/PostSingle';
 import Counter from '../features/counter/Counter';
 import KitchenSink from './pages/KitchenSink';
 import NotFoundPage from './pages/NotFoundPage';
@@ -20,7 +20,7 @@ function App() {
 
   const pages = [
     { name: 'Counter', path: '/counter', Component: Counter },
-    { name: 'Articles', path: '/articles', Component: ArticlesDisplay },
+    { name: 'Posts', path: '/posts', Component: PostsDisplay },
     { name: 'Profile', path: '/profile', Component: Profile },
     { name: 'KitchenSink', path: '/kitchen-sink', Component: KitchenSink },
   ];
@@ -48,8 +48,8 @@ function App() {
               element={<page.Component />}
             />
           ))}
-          <Route path="/articles/:articleId" element={<ArticleSingle />} />
-          <Route path="/editArticle/:articleId" element={<ArticleEdit />} />
+          <Route path="/posts/:postId" element={<PostSingle />} />
+          <Route path="/editPost/:postId" element={<PostEdit />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

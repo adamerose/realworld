@@ -117,19 +117,19 @@ const fetchUserById = userId => {
 ### Actions
 
 - Action creators get defined automatically by `createSlice`. Export them like:
-  - `export const { articleAdded, articleUpdated} =  articlesSlice.actions;`
+  - `export const { postAdded, postUpdated} =  postsSlice.actions;`
 - Dispatch actions in JSX components like:
   - `const dispatch = useDispatch();`
-  - `dispatch(articleAdded({title, content}));`
+  - `dispatch(postAdded({title, content}));`
 
 ### Selectors
 
 - Define selector in slice and export it
-  - `export const selectAllArticles = (state) => state.articles;`
+  - `export const selectAllPosts = (state) => state.posts;`
 - Import to component and call using `useSelector`. Alternatively write them directly in the component
-  - `const articles = useSelector(selectAllArticles)`
-  - `const articles = useSelector((state) => state.articles);`
-  - `const article = useSelector((state) => selectArticleById(state, articleId));`
+  - `const posts = useSelector(selectAllPosts)`
+  - `const posts = useSelector((state) => state.posts);`
+  - `const post = useSelector((state) => selectPostById(state, postId));`
 - Use `createSelector` for writing memoized selectors
 
 ### Thunks
@@ -168,8 +168,8 @@ const fetchUserById = userId => {
 - RTK often calls things “actions” when they're actually “action creators”. \[[1](https://redux-toolkit.js.org/api/createAction), [2](https://github.com/reduxjs/redux-toolkit/issues/673)\]
 - It does this with thunks too. createAsyncThunk creates a thunk action creator.
 - Inconsistency: Normally you provide arguments as a payload object, but if you use `prepare` you provide unpacked arguments directly to the action creator
-  - dispatch(articleUpdated({ id: articleId, title, content }));
-  - dispatch(articleAdded(title, content));
+  - dispatch(postUpdated({ id: postId, title, content }));
+  - dispatch(postAdded(title, content));
 - Boilerplate
   - Why do we need `extraReducers`
   - Why do we individually import actions and selectors? Compare to OvermindJS and mobx-state-tree where I can just import
