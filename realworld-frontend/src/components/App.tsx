@@ -1,26 +1,30 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   BrowserRouter,
   Navigate,
   NavLink,
   Route,
   Routes,
+  useLocation,
 } from 'react-router-dom';
 import './App.scss';
 import { PostEdit } from '../features/posts/PostEdit';
-import PostsDisplay from '../features/posts/PostList';
+import PostsList from '../features/posts/PostsList';
 import PostSingle from '../features/posts/PostSingle';
 import Counter from '../features/counter/Counter';
 import KitchenSink from './pages/KitchenSink';
 import NotFoundPage from './pages/NotFoundPage';
 import Profile from './pages/Profile';
+import store from '../app/store';
+import { fetchUsers } from '../features/users/usersSlice';
+import ErrorBoundary from './ErrorBoundary';
 
 function App() {
   const toggleTheme = useToggleTheme();
 
   const pages = [
     { name: 'Counter', path: '/counter', Component: Counter },
-    { name: 'Posts', path: '/posts', Component: PostsDisplay },
+    { name: 'Posts', path: '/posts', Component: PostsList },
     { name: 'Profile', path: '/profile', Component: Profile },
     { name: 'KitchenSink', path: '/kitchen-sink', Component: KitchenSink },
   ];
@@ -40,19 +44,21 @@ function App() {
       </nav>
 
       <main>
-        <Routes>
-          {pages.map((page) => (
-            <Route
-              key={page.name}
-              path={page.path}
-              element={<page.Component />}
-            />
-          ))}
-          <Route path="/posts/:postId" element={<PostSingle />} />
-          <Route path="/editPost/:postId" element={<PostEdit />} />
+        <ErrorBoundary>
+          <Routes>
+            {pages.map((page) => (
+              <Route
+                key={page.name}
+                path={page.path}
+                element={<page.Component />}
+              />
+            ))}
+            <Route path="/posts/:postId" element={<PostSingle />} />
+            <Route path="/editPost/:postId" element={<PostEdit />} />
 
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </ErrorBoundary>
       </main>
     </BrowserRouter>
   );

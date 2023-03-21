@@ -1,33 +1,43 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { postAdded } from './postsSlice';
+import { useSelector } from 'react-redux';
+import { addNewPost } from './postsSlice';
 import { nanoid } from '@reduxjs/toolkit';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/store';
 
 function PostAdd() {
   // Local state
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [userId, setUserId] = useState('');
+  const [addRequestStatus, setAddRequestStatus] = useState('idle');
+
   const onTitleChanged = (e) => setTitle(e.target.value);
   const onContentChanged = (e) => setContent(e.target.value);
 
   // Redux state
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const onAuthorChanged = (e) => setUserId(e.target.value);
-  const users = useSelector((state) => state.users);
+  const users = useAppSelector((state) => state.users);
 
-  const onSavePostClicked = () => {
-    if (title && content) {
-      dispatch(postAdded(title, content, userId));
+  const canSave =
+    [title, content, userId].every(Boolean) && addRequestStatus === 'idle';
 
-      setTitle('');
-      setContent('');
+  const onSavePostClicked = async () => {
+    if (canSave) {
+      try {
+        setAddRequestStatus('pending');
+        await dispatch(addNewPost({ title, content, user: userId })).unwrap();
+        setTitle('');
+        setContent('');
+        setUserId('');
+      } catch (err) {
+        console.error('Failed to save the post: ', err);
+      } finally {
+        setAddRequestStatus('idle');
+      }
     }
   };
-
-  // Other logic
-  const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
 
   const usersOptions = users.map((user) => (
     <option key={user.id} value={user.id}>

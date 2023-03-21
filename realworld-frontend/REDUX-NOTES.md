@@ -156,12 +156,13 @@ const fetchUserById = userId => {
 
 - [https://redux.js.org/usage/usage-with-typescript#define-root-state-and-dispatch-types](https://redux.js.org/usage/usage-with-typescript#define-root-state-and-dispatch-types)
 - Extract the `RootState` type and the `Dispatch` type from store so that they can be referenced as needed
-- While it's possible to import the `RootState` and `AppDispatch` types into each component, it's better to **create pre-typed versions of the** `useDispatch` **and** `useSelector` **hooks for usage in your application**
+- Create pre-typed versions of the `useDispatch` and `useSelector` hooks for usage in your application
 
 # Notes
 
 - Don't have any side effects in reducers (eg. logging, random, etc). Use [prepare](https://redux.js.org/tutorials/essentials/part-4-using-data#preparing-action-payloads) instead
 - **Don't feel like you need to write reusable selectors for every single field of your state**. Start by writing them inline in the component and refactor later when you find yourself looking up the same values in many parts of your application code.
+- Immer lets us update state in two ways: either _mutating_ the existing state value, or _returning_ a new result. If we return a new value, that will replace the existing state completely with whatever we return. (Note that if you want to manually return a new value, it's up to you to write any immutable update logic that might be needed.)
 
 # Complaints
 

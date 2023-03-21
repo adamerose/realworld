@@ -8,6 +8,7 @@ import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactionButton';
 import { useAppDispatch } from '../../app/store';
+import { Spinner } from '../../components/Spinner';
 
 export default function PostList() {
   return (
@@ -19,15 +20,11 @@ export default function PostList() {
 }
 function PostsList() {
   const dispatch = useAppDispatch();
-
   const posts = useSelector(selectAllPosts);
 
-  // sort posts by date in descending order
-  const orderedPosts = posts
-    ? posts.slice().sort((a, b) => b.date.localeCompare(a.date))
-    : [];
-
+  // Data fetching
   const postStatus = useSelector((state) => state.posts.status);
+  const error = useSelector((state) => state.posts.error);
 
   useEffect(() => {
     if (postStatus === 'idle') {
@@ -35,27 +32,37 @@ function PostsList() {
     }
   }, [postStatus, dispatch]);
 
+  let content;
+  if (postStatus === 'loading') {
+    content = <Spinner text="Loading..." />;
+  } else if (postStatus === 'succeeded') {
+    // Sort posts in reverse chronological order by datetime string
+    const orderedPosts = posts
+      .slice()
+      .sort((a, b) => b.date.localeCompare(a.date));
+
+    content = orderedPosts.map((post) => (
+      <article key={post.id}>
+        <Link to={`/posts/${post.id}`}>
+          <h3>{post.title}</h3>
+        </Link>
+        <div>
+          <PostAuthor userId={post.user} />
+          <TimeAgo timestamp={post.date} />
+        </div>
+        <p>{post.content.substring(0, 100)}</p>
+        <ReactionButtons post={post} />
+      </article>
+    ));
+  } else if (postStatus === 'failed') {
+    content = <div>{error}</div>;
+  }
+
   return (
     <section>
       <hr />
       <h2>Posts</h2>
-      {orderedPosts.map((post) => (
-        <article>
-          <Link
-            key={post.id}
-            to={`/posts/${post.id}`}
-            className="button muted-button"
-          >
-            <h3>{post.title}</h3>
-          </Link>
-          <div>
-            <PostAuthor userId={post.user} />
-            <TimeAgo timestamp={post.date} />
-          </div>
-          <p className="post-content">{post.content.substring(0, 100)}</p>
-          <ReactionButtons post={post} />
-        </article>
-      ))}
+      {content}
     </section>
   );
 }
