@@ -33,8 +33,13 @@ prettier --write "./**/*.{js,jsx,json,ts,tsx}"
 
 Generate mock API that runs on frontend that matches backend API
 
-NestJS API → [OpenAPI](https://docs.nestjs.com/openapi/introduction) → [msw-auto-mock](https://github.com/zoubingwu/msw-auto-mock) → MSW API
-
 # Reference
 
 [https://github.com/lujakob/nestjs-realworld-example-app/tree/prisma](https://github.com/lujakob/nestjs-realworld-example-app/tree/prisma)
+
+# Notes
+
+- Code Sharing - Generate mock API that runs on frontend that matches backend API
+  - Set up Swagger and export an Open API json file described here [https://github.com/nestjs/swagger/issues/158](https://github.com/nestjs/swagger/issues/158)
+  - Generate MSW mocks using [https://github.com/zoubingwu/msw-auto-mock](https://github.com/zoubingwu/msw-auto-mock)
+  - To work properly, the Swagger JSON needs description metadata, which can be added to all routes easily using the [OpenAPI CLI Plugin](https://docs.nestjs.com/openapi/cli-plugin#overview)

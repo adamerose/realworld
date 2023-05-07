@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { postAdded, fetchPosts, selectAllPosts } from './postsSlice';
+import { fetchPosts, selectPostById, selectPostIds } from './postsSlice';
 import { nanoid } from '@reduxjs/toolkit';
 import { Link } from 'react-router-dom';
 import PostAdd from './PostAdd';
@@ -18,9 +18,27 @@ export default function PostList() {
     </>
   );
 }
+
+let PostExcerpt = ({ postId }) => {
+  const post = useSelector((state) => selectPostById(state, postId));
+  return (
+    <article key={post.id}>
+      <Link to={`/posts/${post.id}`}>
+        <h3>{post.title}</h3>
+      </Link>
+      <div>
+        <PostAuthor userId={post.user} />
+        <TimeAgo timestamp={post.date} />
+      </div>
+      <p>{post.content.substring(0, 100)}</p>
+      <ReactionButtons post={post} />
+    </article>
+  );
+};
+
 function PostsList() {
   const dispatch = useAppDispatch();
-  const posts = useSelector(selectAllPosts);
+  const orderedPostIds = useSelector(selectPostIds);
 
   // Data fetching
   const postStatus = useSelector((state) => state.posts.status);
@@ -36,23 +54,8 @@ function PostsList() {
   if (postStatus === 'loading') {
     content = <Spinner text="Loading..." />;
   } else if (postStatus === 'succeeded') {
-    // Sort posts in reverse chronological order by datetime string
-    const orderedPosts = posts
-      .slice()
-      .sort((a, b) => b.date.localeCompare(a.date));
-
-    content = orderedPosts.map((post) => (
-      <article key={post.id}>
-        <Link to={`/posts/${post.id}`}>
-          <h3>{post.title}</h3>
-        </Link>
-        <div>
-          <PostAuthor userId={post.user} />
-          <TimeAgo timestamp={post.date} />
-        </div>
-        <p>{post.content.substring(0, 100)}</p>
-        <ReactionButtons post={post} />
-      </article>
+    content = orderedPostIds.map((postId) => (
+      <PostExcerpt key={postId} postId={postId} />
     ));
   } else if (postStatus === 'failed') {
     content = <div>{error}</div>;

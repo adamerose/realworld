@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as fs from 'fs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,5 +18,9 @@ async function bootstrap() {
   await app.listen(3000);
   const url = 'http://localhost:3000/swagger';
   console.log('Application is running on: ' + url);
+
+  // Export swagger as json
+  // https://github.com/nestjs/swagger/issues/158#issuecomment-531560231
+  fs.writeFileSync('./swagger-spec.json', JSON.stringify(document));
 }
 bootstrap();

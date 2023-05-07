@@ -4,6 +4,7 @@ import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { EditUserDto } from './dto';
 import { UsersService } from './users.service';
+import { ApiProperty } from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
 @Controller('users')
@@ -14,6 +15,7 @@ export class UsersController {
     return user;
   }
 
+  @ApiProperty({ description: 'Edit user' })
   @Patch()
   editUser(@GetUser('id') userId: number, @Body() dto: EditUserDto) {
     return this.usersService.editUser(userId, dto);

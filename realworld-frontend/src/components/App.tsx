@@ -11,22 +11,20 @@ import './App.scss';
 import { PostEdit } from '../features/posts/PostEdit';
 import PostsList from '../features/posts/PostsList';
 import PostSingle from '../features/posts/PostSingle';
-import Counter from '../features/counter/Counter';
-import KitchenSink from './pages/KitchenSink';
-import NotFoundPage from './pages/NotFoundPage';
-import Profile from './pages/Profile';
-import store from '../app/store';
-import { fetchUsers } from '../features/users/usersSlice';
+import NotFoundPage from './NotFoundPage';
 import ErrorBoundary from './ErrorBoundary';
+import { UsersList } from '../features/users/UsersList';
+import { UserPage } from '../features/users/UserPage';
+import NotificationsFetchButton from '../features/notifications/NotificationsFetchButton';
+import { NotificationsList } from '../features/notifications/NotificationsList';
+import NotificationCountBadge from '../features/notifications/NotificationCountBadge';
 
 function App() {
   const toggleTheme = useToggleTheme();
 
   const pages = [
-    { name: 'Counter', path: '/counter', Component: Counter },
     { name: 'Posts', path: '/posts', Component: PostsList },
-    { name: 'Profile', path: '/profile', Component: Profile },
-    { name: 'KitchenSink', path: '/kitchen-sink', Component: KitchenSink },
+    { name: 'Users', path: '/users', Component: UsersList },
   ];
 
   return (
@@ -34,27 +32,25 @@ function App() {
       <nav>
         <h1>RealWorld</h1>
         <ul>
-          {pages.map((page) => (
-            <li key={page.name}>
-              <NavLink to={page.path}>{page.name}</NavLink>
-            </li>
-          ))}
+          <NavLink to="/posts">Posts</NavLink>
+          <NavLink to="/users">Users</NavLink>
+          <NavLink to="/notifications">
+            Notifications (<NotificationCountBadge />)
+          </NavLink>
         </ul>
+        <NotificationsFetchButton />
         <button onClick={toggleTheme}>Toggle Theme</button>
       </nav>
 
       <main>
         <ErrorBoundary>
           <Routes>
-            {pages.map((page) => (
-              <Route
-                key={page.name}
-                path={page.path}
-                element={<page.Component />}
-              />
-            ))}
+            <Route path="/posts" element={<PostsList />} />
             <Route path="/posts/:postId" element={<PostSingle />} />
             <Route path="/editPost/:postId" element={<PostEdit />} />
+            <Route path="/users" element={<UsersList />} />
+            <Route path="/users/:userId" element={<UserPage />} />
+            <Route path="/notifications" element={<NotificationsList />} />
 
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
