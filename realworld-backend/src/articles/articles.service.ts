@@ -1,26 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Injectable()
 export class ArticlesService {
-  create(createArticleDto: CreateArticleDto) {
-    return 'This action adds a new article';
+  // Add prisma
+  constructor(private prisma: PrismaService) { }
+
+  @UseGuards(AuthGuard)
+  create(createArticleDto: CreateArticleDto, authorId: string) {
+    // Use prisma to create an article
+    return this.prisma.article.create({
+      data: {
+        ...createArticleDto,
+        authorId: Number(authorId),
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all articles`;
+    // Use prisma to return all articles
+    return this.prisma.article.findMany();
+
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} article`;
+    // use prisma to return one article
+    return this.prisma.article.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
   update(id: number, updateArticleDto: UpdateArticleDto) {
-    return `This action updates a #${id} article`;
+    // use prisma to update an article
+    return this.prisma.article.update({
+      where: {
+        id: id,
+      },
+      data: updateArticleDto,
+    });
+
   }
 
   remove(id: number) {
-    return `This action removes a #${id} article`;
+    // use prisma to remove an article
+    return this.prisma.article.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }

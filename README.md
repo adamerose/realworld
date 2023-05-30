@@ -4,13 +4,16 @@ This is a monorepo with subfolders for the frontend and backend projects, each w
 
 # Environment
 
-All environment variables are defined in `frontend/.env` and `backend/.env`, make sure they match.
+All environment variables are defined in `frontend/.env` and `backend/.env`
 
 # Scripts
 
 ```
 # Autoformat whole repo
 prettier --write "./**/*.{js,jsx,json,ts,tsx}"
+
+# Generate frontend MSW mocks from NestJS Swagger API. See "Code Sharing" section
+npx msw-auto-mock ./realworld-backend/swagger-spec.json -o ./realworld-frontend/src/mocks/mock.js
 ```
 
 # Demo Features
@@ -29,17 +32,14 @@ prettier --write "./**/*.{js,jsx,json,ts,tsx}"
 
 - n+1 problem
 
-# Code Sharing
+# Code Sharing (todo)
 
 Generate mock API that runs on frontend that matches backend API
 
-# Reference
+NestJS API → [OpenAPI](https://docs.nestjs.com/openapi/introduction) → [msw-auto-mock](https://github.com/zoubingwu/msw-auto-mock) → MSW API
 
-[https://github.com/lujakob/nestjs-realworld-example-app/tree/prisma](https://github.com/lujakob/nestjs-realworld-example-app/tree/prisma)
-
-# Notes
-
-- Code Sharing - Generate mock API that runs on frontend that matches backend API
-  - Set up Swagger and export an Open API json file described here [https://github.com/nestjs/swagger/issues/158](https://github.com/nestjs/swagger/issues/158)
-  - Generate MSW mocks using [https://github.com/zoubingwu/msw-auto-mock](https://github.com/zoubingwu/msw-auto-mock)
-  - To work properly, the Swagger JSON needs description metadata, which can be added to all routes easily using the [OpenAPI CLI Plugin](https://docs.nestjs.com/openapi/cli-plugin#overview)
+- `./realworld-backend/main.ts` exports to `./realworld-backend/swagger-spec.json`
+- `npx msw-auto-mock ./realworld-backend/swagger-spec.json -o ./realworld-frontend/src/mocks/mock.js`
+- Set up Swagger and export an Open API json file described here [https://github.com/nestjs/swagger/issues/158](https://github.com/nestjs/swagger/issues/158)
+- Generate MSW mocks using [https://github.com/zoubingwu/msw-auto-mock](https://github.com/zoubingwu/msw-auto-mock)
+- To work properly, the Swagger JSON needs description metadata, which can be added to all routes easily using the [OpenAPI CLI Plugin](https://docs.nestjs.com/openapi/cli-plugin#overview)

@@ -3,10 +3,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { EditUserDto } from './dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async editUser(userId: number, dto: EditUserDto) {
+  async editUser(
+    userId: number,
+    dto: EditUserDto,
+  ) {
     const user = await this.prisma.user.update({
       where: {
         id: userId,
@@ -16,7 +19,7 @@ export class UsersService {
       },
     });
 
-    delete user.passwordHash;
+    delete user.hash;
 
     return user;
   }

@@ -1,3 +1,5 @@
+// https://www.prisma.io/docs/guides/migrate/seed-database
+
 import { PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import * as argon from 'argon2';

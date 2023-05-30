@@ -1,54 +1,58 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+const baseUrl = import.meta.env.VITE_BACKEND_URL
+console.log({ baseUrl })
+
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: '/fakeApi' }),
-  tagTypes: ['Post'],
+  baseQuery: fetchBaseQuery({ baseUrl }),
+  tagTypes: ['Article'],
   endpoints: (builder) => ({
-    getPosts: builder.query({
-      query: () => '/posts',
+    getArticles: builder.query({
+      query: () => '/articles',
       providesTags: (result = [], error, arg) => [
-        'Post',
-        ...result.map(({ id }) => ({ type: 'Post', id })),
+        'Article',
+        ...result.map(({ id }) => ({ type: 'Article', id })),
       ],
     }),
-    getPost: builder.query({
-      query: (postId) => `/posts/${postId}`,
-      providesTags: (result, error, arg) => [{ type: 'Post', id: arg }],
+    getArticle: builder.query({
+      query: (articleId) => `/articles/${articleId}`,
+      providesTags: (result, error, arg) => [{ type: 'Article', id: arg }],
     }),
-    addNewPost: builder.mutation({
-      query: (initialPost) => ({
-        url: '/posts',
-        method: 'POST',
-        body: initialPost,
+    addNewArticle: builder.mutation({
+      query: (initialArticle) => ({
+        url: '/articles',
+        method: 'ARTICLE',
+        body: initialArticle,
       }),
-      invalidatesTags: ['Post'],
+      invalidatesTags: ['Article'],
     }),
-    editPost: builder.mutation({
-      query: (post) => ({
-        url: `posts/${post.id}`,
+    editArticle: builder.mutation({
+      query: (article) => ({
+        url: `articles/${article.id}`,
         method: 'PATCH',
-        body: post,
+        body: article,
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Post', id: arg.id }],
+      invalidatesTags: (result, error, arg) => [{ type: 'Article', id: arg.id }],
     }),
+
     addReaction: builder.mutation({
-      query: ({ postId, reaction }) => ({
-        url: `posts/${postId}/reactions`,
-        method: 'POST',
+      query: ({ articleId, reaction }) => ({
+        url: `articles/${articleId}/reactions`,
+        method: 'ARTICLE',
         // In a real app, we'd probably need to base this on user ID somehow
         // so that a user can't do the same reaction more than once
         body: { reaction },
       }),
-      async onQueryStarted({ postId, reaction }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ articleId, reaction }, { dispatch, queryFulfilled }) {
         // `updateQueryData` requires the endpoint name and cache key arguments,
         // so it knows which piece of cache state to update
         const patchResult = dispatch(
-          apiSlice.util.updateQueryData('getPosts', undefined, (draft) => {
+          apiSlice.util.updateQueryData('getArticles', undefined, (draft) => {
             // The `draft` is Immer-wrapped and can be "mutated" like in createSlice
-            const post = draft.find((post) => post.id === postId);
-            if (post) {
-              post.reactions[reaction]++;
+            const article = draft.find((article) => article.id === articleId);
+            if (article) {
+              article.reactions[reaction]++;
             }
           }),
         );
