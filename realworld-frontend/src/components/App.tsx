@@ -8,9 +8,9 @@ import {
   useLocation,
 } from 'react-router-dom';
 import './App.scss';
-import { PostEdit } from '../features/posts/PostEdit';
-import PostsList from '../features/posts/PostsList';
-import PostSingle from '../features/posts/PostSingle';
+import { ArticleEdit } from '../features/articles/ArticleEdit';
+import ArticlesList from '../features/articles/ArticlesList';
+import ArticleSingle from '../features/articles/ArticleSingle';
 import NotFoundPage from './NotFoundPage';
 import ErrorBoundary from './ErrorBoundary';
 import { UsersList } from '../features/users/UsersList';
@@ -23,7 +23,7 @@ function App() {
   const toggleTheme = useToggleTheme();
 
   const pages = [
-    { name: 'Posts', path: '/posts', Component: PostsList },
+    { name: 'Articles', path: '/articles', Component: ArticlesList },
     { name: 'Users', path: '/users', Component: UsersList },
   ];
 
@@ -32,7 +32,7 @@ function App() {
       <nav>
         <h1>RealWorld</h1>
         <ul>
-          <NavLink to="/posts">Posts</NavLink>
+          <NavLink to="/articles">Articles</NavLink>
           <NavLink to="/users">Users</NavLink>
           <NavLink to="/notifications">
             Notifications (<NotificationCountBadge />)
@@ -45,9 +45,9 @@ function App() {
       <main>
         <ErrorBoundary>
           <Routes>
-            <Route path="/posts" element={<PostsList />} />
-            <Route path="/posts/:postId" element={<PostSingle />} />
-            <Route path="/editPost/:postId" element={<PostEdit />} />
+            <Route path="/articles" element={<ArticlesList />} />
+            <Route path="/articles/:articleId" element={<ArticleSingle />} />
+            <Route path="/editArticle/:articleId" element={<ArticleEdit />} />
             <Route path="/users" element={<UsersList />} />
             <Route path="/users/:userId" element={<UserPage />} />
             <Route path="/notifications" element={<NotificationsList />} />

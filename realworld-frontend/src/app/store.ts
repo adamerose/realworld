@@ -1,13 +1,12 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch } from 'react-redux';
-import articlesReducer from '../features/articles/articlesSlice';
-import usersReducer from '../features/users/usersSlice';
 import { useSelector } from 'react-redux';
+import { apiSlice } from '../features/api/apiSlice';
 
 const store = configureStore({
   reducer: {
-    articles: articlesReducer,
-    users: usersReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
+
   },
 });
 
