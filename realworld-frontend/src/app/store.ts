@@ -8,6 +8,10 @@ const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
 
   },
+
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
+
 });
 
 export default store;

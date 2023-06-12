@@ -8,6 +8,9 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl }),
   tagTypes: ['Article'],
   endpoints: (builder) => ({
+
+    ////////////////////////////
+    // Articles
     getArticles: builder.query<any, void>({
       query: () => '/articles',
       providesTags: ['Article'],
@@ -32,6 +35,26 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: (result, error, arg) => [{ type: 'Article', id: arg.id }],
     }),
+
+    ////////////////////////////
+    // Authentication
+    login: builder.mutation<LoginResponse, LoginRequest>({
+      query: (credentials) => ({
+        url: '/auth/login',
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
+
+    // Registration
+    register: builder.mutation<RegisterResponse, RegisterRequest>({
+      query: (newUser) => ({
+        url: '/auth/register',
+        method: 'POST',
+        body: newUser,
+      }),
+    }),
+
   }),
 });
 
@@ -39,5 +62,30 @@ export const {
   useGetArticlesQuery,
   useGetArticleByIdQuery,
   useAddNewArticleMutation,
-  useEditArticleMutation
+  useEditArticleMutation,
+
+  useLoginMutation,
+
 } = apiSlice;
+
+
+////////////////////////////
+// Types
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  token: string;
+}
+
+interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
+interface RegisterResponse {
+  token: string;
+}

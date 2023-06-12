@@ -13,7 +13,6 @@ function ErrorBoundary({ children }) {
       <div>
         <section>
           <h3>An error occured.</h3>
-          <p></p>
           <pre>
             {error.message}
             {stack}

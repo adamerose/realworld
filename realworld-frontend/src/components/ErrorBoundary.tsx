@@ -1,40 +1,61 @@
 import React, { useState } from 'react';
-import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
-import { useLocation } from 'react-router-dom';
 
-function ErrorBoundary({ children }) {
-  const location = useLocation();
-  const [stack, setStack] = useState('');
+interface Props {
+  fallback?: React.ReactNode;
+  children: React.ReactNode;
+}
+interface State {
+  message: any;
+  stack: any;
+}
 
-  function ErrorFallback(props) {
-    const { componentStack, error, resetErrorBoundary } = props;
-    console.log({ props, componentStack });
-    return (
+const defaultState: State = {
+  message: null,
+  stack: null,
+};
+
+class ErrorBoundary extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = defaultState;
+  }
+
+  componentDidCatch(error: Error, info: { componentStack: string }) {
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/Error
+    // console.log('ErrorBoundary.componentDidCatch', { error, info });
+    console.log(error instanceof Error);
+    this.setState({
+      message: error.message,
+      stack: info.componentStack,
+    });
+  }
+
+  render() {
+    const defaultFallback = (
       <div>
         <section>
           <h3>An error occured.</h3>
-          <p></p>
           <pre>
-            {error.message}
-            {stack}
+            {this.state.message}
+            {this.state.stack}
           </pre>
         </section>
-        <button onClick={resetErrorBoundary}>Try again</button>
+        <button
+          onClick={() => {
+            this.setState(defaultState);
+          }}
+        >
+          Try again
+        </button>
       </div>
     );
-  }
 
-  return (
-    <ReactErrorBoundary
-      FallbackComponent={ErrorFallback}
-      key={location.pathname}
-      onError={(error, info) => {
-        setStack(info.componentStack);
-      }}
-    >
-      {children}
-    </ReactErrorBoundary>
-  );
+    if (this.state.message) {
+      return this.props?.fallback ? this.props.fallback : defaultFallback;
+    }
+
+    return this.props.children;
+  }
 }
 
 export default ErrorBoundary;
