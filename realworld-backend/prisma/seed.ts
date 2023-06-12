@@ -14,7 +14,7 @@ async function main() {
         hash: await argon.hash(faker.internet.password()),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        bookmarks: {
+        articles: {
           // Loop and create randomly between 0-5 articles for each user
           create: Array.from({ length: Math.floor(Math.random() * 5) }).map(
             () => ({
@@ -35,7 +35,7 @@ async function main() {
       hash: await argon.hash('admin'),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      bookmarks: {
+      articles: {
         // Loop and create randomly between 0-5 articles for each user
         create: Array.from({ length: Math.floor(Math.random() * 5) }).map(
           () => ({
