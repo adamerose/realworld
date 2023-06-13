@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface Props {
   fallback?: React.ReactNode;
@@ -58,4 +59,25 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 }
 
-export default ErrorBoundary;
+// TODO - Can I make stack trace file links clickable to open the file in VS Code?
+function IDELink({ filePath }) {
+  return (
+    <a href={`vscode://${encodeURIComponent(filePath.replace(/\\/g, '/'))}`}>
+      {filePath}
+    </a>
+  );
+}
+
+// Reset state on route change
+function ErrorBoundaryWrapper(props) {
+  const [key, setKey] = useState(0);
+  const location = useLocation();
+
+  useEffect(() => {
+    setKey((prevKey) => prevKey + 1); // increment key to force remount
+  }, [location]);
+
+  return <ErrorBoundary key={key} {...props} />;
+}
+
+export default ErrorBoundaryWrapper;

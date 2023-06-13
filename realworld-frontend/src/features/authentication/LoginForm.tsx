@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { useLoginMutation } from './api/apiSlice';
+import { apiSlice } from '../api/apiSlice';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { mutate, isLoading, isError } = useLoginMutation();
+  const [login, { isLoading, isError, data }] =
+    apiSlice.endpoints.login.useMutation();
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        mutate({ email, password });
+        login({ email, password });
       }}
     >
       <h2>Login</h2>

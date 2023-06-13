@@ -3,6 +3,14 @@ import { TypedUseSelectorHook, useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { apiSlice } from '../features/api/apiSlice';
 
+
+const delayMiddleware = () => next => async action => {
+  if (action.meta && action.meta.thunk) {
+    return new Promise(resolve => setTimeout(() => resolve(next(action)), 2000));
+  }
+  return next(action);
+};
+
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
@@ -10,9 +18,10 @@ const store = configureStore({
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware().concat(apiSlice.middleware, delayMiddleware),
 
 });
+
 
 export default store;
 

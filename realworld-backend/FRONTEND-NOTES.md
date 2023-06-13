@@ -4,15 +4,11 @@
 # Install node_modules
 npm install
 
-# Start the database docker container
-npm run db:dev:restart
-
 # Create initial prisma client
 npx prisma generate
 
 # Delete and remake the database with latest schema
 npx prisma migrate reset --force
-
 
 # Start the NestJS server
 npm run start:dev

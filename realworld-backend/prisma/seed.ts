@@ -11,16 +11,13 @@ async function main() {
     const newUser = await prisma.user.create({
       data: {
         email: faker.internet.email(),
-        hash: await argon.hash(faker.internet.password()),
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        passwordHash: await argon.hash(faker.internet.password()),
         articles: {
           // Loop and create randomly between 0-5 articles for each user
           create: Array.from({ length: Math.floor(Math.random() * 5) }).map(
             () => ({
               title: faker.lorem.words(),
-              description: faker.lorem.paragraph(),
-              link: faker.internet.url(),
+              content: faker.lorem.paragraph(),
             }),
           ),
         },
@@ -32,16 +29,13 @@ async function main() {
   const myUser = await prisma.user.create({
     data: {
       email: 'admin@gmail.com',
-      hash: await argon.hash('admin'),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
+      passwordHash: await argon.hash('admin'),
       articles: {
         // Loop and create randomly between 0-5 articles for each user
         create: Array.from({ length: Math.floor(Math.random() * 5) }).map(
           () => ({
             title: faker.lorem.words(),
-            description: faker.lorem.paragraph(),
-            link: faker.internet.url(),
+            content: faker.lorem.paragraph(),
           }),
         ),
       },

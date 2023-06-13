@@ -13,70 +13,46 @@ import {
 } from '@nestjs/common';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
-import { ArticleService } from './article.service';
-import {
-  CreateArticleDto,
-  EditArticleDto,
-} from './dto';
+import { ArticleService } from './articles.service';
+import { CreateArticleDto, EditArticleDto } from './dto';
 
-@UseGuards(JwtGuard)
 @Controller('articles')
 export class ArticleController {
-  constructor(
-    private articleService: ArticleService,
-  ) { }
+  constructor(private articleService: ArticleService) {}
 
   @Get()
-  getArticles(@GetUser('id') userId: number) {
-    return this.articleService.getArticles(
-      userId,
-    );
+  getArticles() {
+    return this.articleService.getArticles();
   }
 
   @Get(':id')
-  getArticleById(
-    @GetUser('id') userId: number,
-    @Param('id', ParseIntPipe) articleId: number,
-  ) {
-    return this.articleService.getArticleById(
-      userId,
-      articleId,
-    );
+  getArticleById(@Param('id') articleId: string) {
+    return this.articleService.getArticleById(articleId);
   }
 
+  @UseGuards(JwtGuard)
   @Post()
-  createArticle(
-    @GetUser('id') userId: number,
-    @Body() dto: CreateArticleDto,
-  ) {
-    return this.articleService.createArticle(
-      userId,
-      dto,
-    );
+  createArticle(@GetUser('id') userId: string, @Body() dto: CreateArticleDto) {
+    return this.articleService.createArticle(userId, dto);
   }
 
+  @UseGuards(JwtGuard)
   @Patch(':id')
   editArticleById(
-    @GetUser('id') userId: number,
-    @Param('id', ParseIntPipe) articleId: number,
+    @GetUser('id') userId: string,
+    @Param('id') articleId: string,
     @Body() dto: EditArticleDto,
   ) {
-    return this.articleService.editArticleById(
-      userId,
-      articleId,
-      dto,
-    );
+    return this.articleService.editArticleById(userId, articleId, dto);
   }
 
+  @UseGuards(JwtGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   deleteArticleById(
-    @GetUser('id') userId: number,
-    @Param('id', ParseIntPipe) articleId: number,
+    @GetUser('id') userId: string,
+    @Param('id') articleId: string,
   ) {
-    return this.articleService.deleteArticleById(
-      userId,
-      articleId,
-    );
+    return this.articleService.deleteArticleById(userId, articleId);
   }
 }

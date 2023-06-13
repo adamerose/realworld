@@ -1,18 +1,16 @@
+// React
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-
 // Redux
-import { useDispatch, useSelector } from 'react-redux';
-import { nanoid } from '@reduxjs/toolkit';
 import { useAppDispatch } from '../../app/store';
-import { useAddNewArticleMutation, useGetArticlesQuery } from '../api/apiSlice';
+import { apiSlice } from '../api/apiSlice';
 
 // UI
 import { Loader } from '@mantine/core';
+// Other
+import { parseISO, formatDistanceToNow } from 'date-fns';
 
 function ArticlesFeed() {
-  const dispatch = useAppDispatch();
-
   const {
     data: articles = [],
     isLoading,
@@ -20,11 +18,11 @@ function ArticlesFeed() {
     isSuccess,
     isError,
     error,
-  } = useGetArticlesQuery();
+  } = apiSlice.endpoints.getArticles.useQuery();
 
   // sort articles by date in descending order
   const orderedArticles = articles
-    ? articles.slice().sort((a, b) => b.date.localeCompare(a.date))
+    ? articles.slice().sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
     : [];
 
   return (
@@ -32,58 +30,47 @@ function ArticlesFeed() {
       <hr />
       <h2>Articles</h2>
       {orderedArticles.map((article) => (
-        <article>
-          <Link
-            key={article.id}
-            to={`/articles/${article.id}`}
-            className="button muted-button"
-          >
+        <article key={article.id}>
+          <Link to={`/articles/${article.id}`}>
             <h3>{article.title}</h3>
           </Link>
           <div>
-            <ArticleAuthor userId={article.user} />
-            <TimeAgo timestamp={article.date} />
+            <ArticleAuthor userId={article.authorId} />
+            <TimeAgo timestamp={article.createdAt} />
           </div>
-          <p className="article-content">{article.content.substring(0, 100)}</p>
+          <p>{article.content.substring(0, 100)}</p>
         </article>
       ))}
     </section>
   );
 }
 
-const ArticleSingle = () => {
-  const params = useParams();
-  const { articleId } = params;
-
-  const article = useSelector((state) => selectArticleById(state, articleId));
-
-  let content;
-  if (!article) {
-    content = <h2>Article not found!</h2>;
-  } else {
-    content = (
-      <>
-        <h2>{article.title}</h2>
-        <div>
-          <ArticleAuthor userId={article.user} />
-          <TimeAgo timestamp={article.date} />
-        </div>
-        <p>{article.content}</p>
-        <ReactionButtons article={article} />
-
-        <Link to={`/editArticle/${article.id}`}>
-          <button>Edit Article</button>
-        </Link>
-      </>
-    );
+export const TimeAgo = ({ timestamp }) => {
+  let timeAgo = '';
+  if (timestamp) {
+    const date = parseISO(timestamp);
+    const timePeriod = formatDistanceToNow(date);
+    timeAgo = `${timePeriod} ago`;
   }
 
   return (
-    <article>
-      <Link to="/articles">←Back</Link>
-      {content}
-    </article>
+    <div title={timestamp}>
+      <i>{timeAgo}</i>
+    </div>
   );
+};
+
+export const ArticleAuthor = ({ userId }) => {
+  const {
+    data: author,
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    error,
+  } = apiSlice.endpoints.getArticleById.useQuery(userId);
+
+  return <div>by {author ? author.email : 'Unknown author'}</div>;
 };
 
 export default ArticlesFeed;

@@ -13,16 +13,26 @@ import { useState } from 'react';
 
 export function MantineWrapper({ children }: { children: React.ReactNode }) {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
+  const isDark = colorScheme === 'dark';
   const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+    setColorScheme(value || (isDark ? 'light' : 'dark'));
 
   const myTheme: MantineThemeOverride = { colorScheme: colorScheme };
 
+  console.log(myTheme);
   return (
     <ColorSchemeProvider
       colorScheme={colorScheme}
       toggleColorScheme={toggleColorScheme}
     >
+      <link
+        rel="stylesheet"
+        href={
+          isDark
+            ? 'https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css'
+            : 'https://cdn.jsdelivr.net/npm/water.css@2/out/light.css'
+        }
+      />
       <MantineProvider theme={myTheme} withGlobalStyles withNormalizeCSS>
         {children}
       </MantineProvider>

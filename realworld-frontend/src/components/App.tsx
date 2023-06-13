@@ -8,27 +8,30 @@ import {
   useLocation,
 } from 'react-router-dom';
 import './App.scss';
-import NotFoundPage from './components/NotFoundPage';
-import ErrorBoundary from './components/ErrorBoundary';
-import ArticlesFeed from './features/articles/ArticlesFeed';
-import ArticleView from './features/articles/ArticleView';
-import ArticleEditor from './features/articles/ArticleEditor';
-import { ThemeToggle, MantineWrapper } from './components/MantineUtils';
-import Demo from './components/Demo';
-import styled from 'styled-components';
+import NotFoundPage from './NotFoundPage';
+import ErrorBoundary from './ErrorBoundary';
+import ArticlesFeed from '../features/articles/ArticlesFeed';
+import ArticleView from '../features/articles/ArticleView';
+import ArticleEditor from '../features/articles/ArticleEditor';
+import { ThemeToggle, MantineWrapper } from './MantineUtils';
+import styled from '@emotion/styled';
+import LoginForm from '../features/authentication/LoginForm';
 
 function App() {
   const content = (
-    <StyledWrapper>
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
-      />
-
+    <Styled>
       <nav>
         <h2>RealWorld</h2>
-        <NavLink to="/articles">Feed</NavLink>
-        <NavLink to="/editor">Submit</NavLink>
+        <NavLink end to="/articles">
+          Home
+        </NavLink>
+        <NavLink end to="/editor">
+          Submit
+        </NavLink>
+
+        <NavLink end to="/login">
+          Login
+        </NavLink>
         <ThemeToggle />
       </nav>
 
@@ -36,13 +39,14 @@ function App() {
         <ErrorBoundary>
           <Routes>
             <Route path="/articles" element={<ArticlesFeed />} />
+            <Route path="/login" element={<LoginForm />} />
             <Route path="/articles/:articleId" element={<ArticleView />} />
             <Route path="/editor/:articleId?" element={<ArticleEditor />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </ErrorBoundary>
       </main>
-    </StyledWrapper>
+    </Styled>
   );
 
   return (
@@ -52,14 +56,17 @@ function App() {
   );
 }
 
-const StyledWrapper = styled.div`
+const Styled = styled.div`
   nav {
     & :first-child {
       flex-grow: 1;
     }
 
     & a {
-      text-decoration: underline;
+      &.active {
+        text-decoration: underline;
+      }
+      color: unset;
     }
 
     display: flex;

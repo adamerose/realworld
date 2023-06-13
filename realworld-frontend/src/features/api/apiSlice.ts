@@ -5,8 +5,17 @@ console.log({ baseUrl })
 
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl }),
-  tagTypes: ['Article'],
+  baseQuery: (args, api, extraOptions) => {
+    const jwt = localStorage.getItem('jwt');
+    return fetchBaseQuery({
+      baseUrl,
+      ...args,
+      headers: {
+        ...args.headers,
+        Authorization: jwt ? `Bearer ${jwt}` : undefined,
+      },
+    })(args, api, extraOptions);
+  }, tagTypes: ['Article', 'User'],
   endpoints: (builder) => ({
 
     ////////////////////////////
@@ -36,6 +45,11 @@ export const apiSlice = createApi({
       invalidatesTags: (result, error, arg) => [{ type: 'Article', id: arg.id }],
     }),
 
+    getUserById: builder.query({
+      query: (userId) => `/users/${userId}`,
+      providesTags: (result, error, arg) => [{ type: 'User', id: arg }],
+    }),
+
     ////////////////////////////
     // Authentication
     login: builder.mutation<LoginResponse, LoginRequest>({
@@ -44,6 +58,15 @@ export const apiSlice = createApi({
         method: 'POST',
         body: credentials,
       }),
+      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+        try {
+          const result = await queryFulfilled;
+          localStorage.setItem('jwt', result.data.token);
+        } catch {
+          localStorage.removeItem('jwt');
+        }
+      },
+
     }),
 
     // Registration
@@ -57,16 +80,6 @@ export const apiSlice = createApi({
 
   }),
 });
-
-export const {
-  useGetArticlesQuery,
-  useGetArticleByIdQuery,
-  useAddNewArticleMutation,
-  useEditArticleMutation,
-
-  useLoginMutation,
-
-} = apiSlice;
 
 
 ////////////////////////////
